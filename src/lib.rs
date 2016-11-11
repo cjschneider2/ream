@@ -1,36 +1,25 @@
 // Program modules
 mod util;
+mod init;
+mod config;
+mod state;
+mod bif;
 
 // standard library imports
 // extern library imports
 // local imports
+use init::init;
 
-// Library API Structures
+// Exported Library API Structures
+pub use config::Configuration;
 
-/// This structure contains the options for the initialization of the REAM.
-/// The approach is different from the BEAM which parses the command line options
-/// as a part of the startup, but doing this make configuration if starting from
-/// an already running program difficult to separate the program's options from
-/// the once which should be required by REAM.
-#[derive(Debug)]
-pub struct Configuration {
-    foo: usize,
-}
-
-impl Configuration {
-    pub fn defaults() -> Configuration {
-        Configuration {
-            foo: 0
-        }
-    }
-}
-
-
-// Library API Functions
+// Exported Library API Functions
 pub fn erl_start(conf: Configuration) {
     // Debug
-    //println!("Using the following configuration:");
-    println!("{:?}", conf);
+    println!("🕵 : Using the following configuration:");
+    println!("{:#?}", conf);
+
+    let mut state = init(conf);
 
     unimplemented!();
 }

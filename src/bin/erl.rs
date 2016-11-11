@@ -6,7 +6,7 @@ use ream::erl_start;
 use ream::Configuration;
 
 fn parse_arg(arg: String) {
-    println!("\t : {}", arg);
+    println!("\t{}", arg);
 }
 
 fn main() {
