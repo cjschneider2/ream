@@ -4,6 +4,8 @@ mod init;
 mod config;
 mod state;
 mod bif;
+mod atom;
+mod term;
 
 // standard library imports
 // extern library imports
