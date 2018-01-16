@@ -1,0 +1,10 @@
+[package]
+name = "erlang_shell"
+version = "0.1.0"
+authors = ["Charles J. Schneider <schneider@br-tech.de>"]
+
+[dependencies]
+clap = "2"
+
+[dependencies.erlang_core]
+path = "../erlang_core"

@@ -1,6 +1,6 @@
-[package]
-name = "ream"
-version = "0.0.1"
-authors = ["C. Jeremiah Schneider <cjschneider2@gmail.com>"]
+[workspace]
 
-[dependencies]
+members = ["erlang_core", "erlang_shell"]
+
+[Profile.release]
+debug = true

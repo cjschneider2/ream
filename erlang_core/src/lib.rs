@@ -1,27 +1,25 @@
+#![allow(dead_code)]
+
 // Program modules
 mod util;
+mod error;
 mod init;
 mod config;
 mod state;
 mod bif;
-mod atom;
-mod term;
+mod erlang_types;
 
-// standard library imports
-// extern library imports
-// local imports
 use init::init;
 
-// Exported Library API Structures
 pub use config::Configuration;
 
 // Exported Library API Functions
 pub fn erl_start(conf: Configuration) {
     // Debug
-    println!("🕵 : Using the following configuration:");
+    println!("Using the following configuration:");
     println!("{:#?}", conf);
 
-    let mut state = init(conf);
+    let _state = init(conf);
 
     unimplemented!();
 }
