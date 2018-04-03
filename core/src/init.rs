@@ -46,7 +46,7 @@ pub fn init(conf: Configuration) -> State {
     //        - unicode
     //        - external
     //        - map
-    //        - beam bif load
+    //        - beam.rs bif load
     //        - delay trap
     //        - late init process
     //        - packet parser

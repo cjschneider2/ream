@@ -1,6 +1,5 @@
 [workspace]
-
-members = ["erlang_core", "erlang_shell"]
+members = ["core"]
 
 [Profile.release]
 debug = true
