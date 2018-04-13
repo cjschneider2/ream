@@ -1,4 +1,3 @@
-
 pub enum ChunkType {
     Unknown,
     Atom,              // Atom
@@ -12,7 +11,7 @@ pub enum ChunkType {
     LocalFunTable,     // LocT
     CompilerInfoTable, // CInf
     Attributes,        // Attr
-    DebugInfo,         // Dbgi // TODO: Check...
+    DebugInfo,         // Dbgi
     Line,              // Line
 }
 
@@ -30,25 +29,6 @@ impl Chunk {
             name: [0u8; 4],
             size: 0,
             data: Vec::new(),
-        }
-    }
-}
-
-pub struct AtomChunk {
-    name: &'static str,
-    size: usize,
-    count: usize,
-    atoms: Vec<String>
-}
-
-pub struct Beam {
-    pub chunks: Vec<Chunk>,
-}
-
-impl Beam {
-    pub fn new() -> Beam {
-        Beam {
-            chunks: Vec::new(),
         }
     }
 }
