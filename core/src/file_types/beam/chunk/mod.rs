@@ -1,3 +1,14 @@
+
+pub mod atom;
+pub mod code;
+pub mod export;
+pub mod import;
+pub mod string;
+pub mod local_fn;
+pub mod compiler_info;
+pub mod literal;
+
+#[derive(Debug)]
 pub enum ChunkType {
     Unknown,
     Atom,              // Atom
