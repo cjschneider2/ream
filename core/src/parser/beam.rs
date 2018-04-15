@@ -54,11 +54,11 @@ pub fn load_beam_from_bytes(bytes: &[u8]) -> Result<Beam, Error> {
             "StrT" => parse_string_chunk(&mut cursor, &mut beam)?,
             "ImpT" => parse_import_chunk(&mut cursor, &mut beam)?,
             "ExpT" => parse_export_chunk(&mut cursor, &mut beam)?,
-            "FunT" => parse_chunk(&mut cursor, &mut beam, ChunkType::FunctionTable)?,
-            "LitT" => parse_chunk(&mut cursor, &mut beam, ChunkType::LiteralTable)?,
-            "LocT" => parse_chunk(&mut cursor, &mut beam, ChunkType::LocalFunTable)?,
+            "LitT" => parse_literal_chunk(&mut cursor, &mut beam)?,
+            "LocT" => parse_local_fn_chunk(&mut cursor, &mut beam)?,
+            "CInf" => parse_compiler_info_chunk(&mut cursor, &mut beam)?,
             "Attr" => parse_chunk(&mut cursor, &mut beam, ChunkType::Attributes)?,
-            "CInf" => parse_chunk(&mut cursor, &mut beam, ChunkType::CompilerInfoTable)?,
+            "FunT" => parse_chunk(&mut cursor, &mut beam, ChunkType::FunctionTable)?,
             "Dbgi" => parse_chunk(&mut cursor, &mut beam, ChunkType::DebugInfo)?,
             "Line" => parse_chunk(&mut cursor, &mut beam, ChunkType::Line)?,
             unknown => {
@@ -78,6 +78,9 @@ fn parse_chunk(
     beam: &mut Beam,
     kind: ChunkType
 ) -> Result<(), Error> {
+
+    println!("got unprocessed chunk: {:?}", kind);
+
     let mut chunk = Chunk::new();
     chunk.kind = kind;
     let chunk_size = cursor.read_u32::<BE>()?;
@@ -201,6 +204,66 @@ fn parse_string_chunk(
 
     for _ in 0..chunk_size {
         beam.string.data.push(cursor.read_u8()?);
+    }
+
+    let padding = align_by_four(chunk_size) - chunk_size;
+    for _ in 0..padding {
+        assert_eq!(0, cursor.read_u8()?);
+    }
+
+    Ok(())
+}
+
+fn parse_local_fn_chunk(
+    cursor: &mut Cursor<&[u8]>,
+    beam: &mut Beam
+) -> Result<(), Error> {
+    let chunk_size = cursor.read_u32::<BE>()?;
+    let count = cursor.read_u32::<BE>()?;
+
+    for _ in 0..count {
+        beam.local_fn.push_fn(
+            cursor.read_u32::<BE>()?,
+            cursor.read_u32::<BE>()?,
+            cursor.read_u32::<BE>()?);
+    }
+
+    let padding = align_by_four(chunk_size) - chunk_size;
+    for _ in 0..padding {
+        assert_eq!(0, cursor.read_u8()?);
+    }
+
+    Ok(())
+}
+
+fn parse_compiler_info_chunk(
+    cursor: &mut Cursor<&[u8]>,
+    beam: &mut Beam
+) -> Result<(), Error> {
+    let chunk_size = cursor.read_u32::<BE>()?;
+
+    for _ in 0..chunk_size {
+        beam.compiler_info.data.push(cursor.read_u8()?);
+    }
+
+    let padding = align_by_four(chunk_size) - chunk_size;
+    for _ in 0..padding {
+        assert_eq!(0, cursor.read_u8()?);
+    }
+
+    Ok(())
+}
+
+fn parse_literal_chunk(
+    cursor: &mut Cursor<&[u8]>,
+    beam: &mut Beam
+) -> Result<(), Error> {
+    let chunk_size = cursor.read_u32::<BE>()?;
+    beam.literal.decompressed_size = cursor.read_u32::<BE>()?;
+
+    let byte_cnt = chunk_size - 4;
+    for _ in 0..byte_cnt {
+        beam.compiler_info.data.push(cursor.read_u8()?);
     }
 
     let padding = align_by_four(chunk_size) - chunk_size;
